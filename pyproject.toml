@@ -1,0 +1,117 @@
+[build-system]
+requires = ["setuptools>=69.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rag-game-changer"
+version = "0.1.0"
+description = "Production-Ready Retrieval-Augmented Generation System"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [
+    {name = "RAG Team", email = "team@rag-game-changer.com"}
+]
+keywords = ["rag", "retrieval", "generation", "llm", "ai", "nlp"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence"
+]
+dependencies = [
+    "fastapi>=0.109.0",
+    "uvicorn[standard]>=0.27.0",
+    "pydantic>=2.5.0",
+    "pydantic-settings>=2.1.0",
+    "python-dotenv>=1.0.0",
+    "pyyaml>=6.0.1",
+    "loguru>=0.7.2",
+    "langchain>=0.1.0",
+    "langchain-openai>=0.0.5",
+    "langchain-community>=0.0.20",
+    "unstructured[all-docs]>=0.12.0",
+    "pypdf>=3.17.0",
+    "beautifulsoup4>=4.12.2",
+    "sentence-transformers>=2.2.2",
+    "openai>=1.10.0",
+    "pinecone-client>=3.1.0",
+    "weaviate-client>=4.5.0",
+    "chromadb>=0.4.22",
+    "qdrant-client>=1.8.0",
+    "faiss-cpu>=1.8.0",
+    "torch>=2.1.0",
+    "transformers>=4.36.0",
+    "numpy>=1.26.3",
+    "scipy>=1.11.4",
+    "scikit-learn>=1.4.0",
+    "prometheus-client>=0.19.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.23.0",
+    "pytest-cov>=4.1.0",
+    "pytest-benchmark>=4.0.0",
+    "black>=23.12.0",
+    "isort>=5.13.0",
+    "mypy>=1.8.0",
+    "ruff>=0.1.0",
+    "pre-commit>=3.6.0",
+]
+docs = [
+    "sphinx>=7.2.0",
+    "sphinx-rtd-theme>=2.0.0",
+]
+all = [
+    "rag-game-changer[dev]",
+    "rag-game-changer[docs]",
+]
+
+[project.scripts]
+rag-cli = "scripts.cli:main"
+rag-server = "scripts.server:main"
+rag-ingest = "scripts.ingest:main"
+
+[project.urls]
+Homepage = "https://github.com/anomalyco/rag-the-game-changer"
+Repository = "https://github.com/anomalyco/rag-the-game-changer"
+Issues = "https://github.com/anomalyco/rag-the-game-changer/issues"
+
+[tool.black]
+line-length = 100
+target-version = ['py39', 'py310', 'py311', 'py312']
+include = '\.pyi?$'
+
+[tool.isort]
+profile = "black"
+line_length = 100
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+select = [
+    "E", "W", "F", "I", "B", "C", "UP", "ARG", "PL", "PERF", "RUF"
+]
+ignore = [
+    "E501", "B008", "C901", "PLR0913", "ARG001"
+]
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_ignores = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+no_implicit_optional = true
+strict_optional = true
+strict_equality = true

@@ -1,0 +1,246 @@
+# RAG-The-Game-Changer Pipeline Configuration
+# Main configuration file for the RAG pipeline
+
+project:
+  name: "RAG-The-Game-Changer"
+  version: "0.1.0"
+  environment: "${ENVIRONMENT:development}"
+
+pipeline:
+  name: "main_rag_pipeline"
+  version: "1.0.0"
+
+  # Document Ingestion Settings
+  ingestion:
+    enabled: true
+    batch_size: 32
+    max_concurrent: 4
+    timeout: 300  # seconds
+    
+    preprocessors:
+      - text_cleaner
+      - language_detector
+      - duplicate_detector
+      - quality_filter
+    
+    chunkers:
+      - semantic_chunker
+      - fallback:
+          - token_chunker
+
+  # Retrieval Settings
+  retrieval:
+    enabled: true
+    default_strategy: "hybrid"  # dense, sparse, hybrid
+    top_k: 5
+    max_top_k: 20
+    
+    strategies:
+      dense:
+        enabled: true
+        weight: 0.7
+        embedding_model: "${OPENAI_EMBEDDING_MODEL:text-embedding-3-small}"
+        vector_db: "${VECTOR_DB:pinecone}"
+        search_type: "approximate"  # exact, approximate
+        approximate_config:
+          ef_search: 100
+          ef_construction: 200
+      
+      sparse:
+        enabled: true
+        weight: 0.3
+        method: "bm25"  # bm25, tfidf
+        index_type: "whoosh"  # whoosh, elasticsearch
+      
+      hybrid:
+        enabled: true
+        fusion_method: "rrf"  # rrf, linear, convex
+        reranking:
+          enabled: true
+          model: "ms-marco-MiniLM-l12-h384-uncased"
+          batch_size: 32
+    
+    filters:
+      metadata_filter: true
+      similarity_threshold: 0.5
+      max_doc_length: 10000
+
+  # Generation Settings
+  generation:
+    enabled: true
+    llm_provider: "openai"
+    model: "${OPENAI_LLM_MODEL:gpt-4-turbo-preview}"
+    temperature: 0.1
+    max_tokens: 4096
+    
+    context:
+      max_tokens: 8000
+      overlap_chunks: 1
+      format: "structured"  # structured, plain, json
+    
+    grounding:
+      citation_enabled: true
+      citation_style: "apa"
+      evidence_mapping: true
+      hallucination_check: true
+    
+    output:
+      format: "structured"  # structured, plain, markdown
+      confidence_score: true
+      sources_list: true
+
+  # Quality Assurance
+  quality:
+    enabled: true
+    min_confidence: 0.7
+    hallucination_threshold: 0.3
+    fact_check: true
+    
+    metrics:
+      retrieval:
+        - precision@k
+        - recall@k
+        - ndcg@k
+        - mrr
+      
+      generation:
+        - rouge
+        - bert_score
+        - factual_accuracy
+        - completeness
+
+# Vector Database Configuration
+vector_db:
+  provider: "${VECTOR_DB:pinecone}"
+  
+  pinecone:
+    api_key: "${PINECONE_API_KEY}"
+    environment: "${PINECONE_ENVIRONMENT}"
+    index: "${PINECONE_INDEX_NAME:rag-index}"
+    metric: "cosine"
+  
+  weaviate:
+    url: "${WEAVIATE_URL:http://localhost:8080}"
+    api_key: "${WEAVIATE_API_KEY}"
+    index: "${WEAVIATE_INDEX_NAME:RAGIndex}"
+  
+  chromadb:
+    host: "${CHROMA_HOST:localhost}"
+    port: "${CHROMA_PORT:8000}"
+    persist_dir: "${CHROMA_PERSIST_DIRECTORY:./data/chromadb}"
+    collection: "${CHROMA_COLLECTION_NAME:rag-collection}"
+  
+  qdrant:
+    url: "${QDRANT_URL:http://localhost:6333}"
+    api_key: "${QDRANT_API_KEY}"
+    collection: "${QDRANT_COLLECTION_NAME:rag-collection}"
+  
+  faiss:
+    index_path: "${FAISS_INDEX_PATH:./data/faiss/index.faiss}"
+    metadata_path: "${FAISS_METADATA_PATH:./data/faiss/metadata.pkl}"
+    metric: "cosine"
+
+# Embedding Configuration
+embedding:
+  provider: "${EMBEDDING_PROVIDER:openai}"
+  
+  openai:
+    api_key: "${OPENAI_API_KEY}"
+    model: "${OPENAI_EMBEDDING_MODEL:text-embedding-3-small}"
+    dimensions: "${OPENAI_EMBEDDING_DIMENSIONS:1536}"
+    batch_size: 100
+  
+  sentence_transformers:
+    model: "${SENTENCE_TRANSFORMER_MODEL:sentence-transformers/all-MiniLM-L6-v2}"
+    device: "${SENTENCE_TRANSFORMER_DEVICE:cpu}"
+    normalize: true
+  
+  cohere:
+    api_key: "${COHERE_API_KEY}"
+    model: "${COHERE_EMBEDDING_MODEL:embed-english-v3.0}"
+
+# Chunking Configuration
+chunking:
+  default_strategy: "${CHUNK_STRATEGY:semantic}"
+  
+  strategies:
+    token_chunker:
+      chunk_size: 1000
+      chunk_overlap: 200
+    
+    sentence_chunker:
+      chunk_size: 1000
+      chunk_overlap: 200
+      min_sentences: 2
+    
+    semantic_chunker:
+      break_mode: "paragraph"
+      chunk_size: 1000
+      chunk_overlap: 200
+    
+    recursive_chunker:
+      separators: ["\n\n", "\n", ". ", " ", ""]
+      chunk_size: 1000
+      chunk_overlap: 200
+
+# Monitoring and Observability
+monitoring:
+  enabled: "${METRICS_ENABLED:true}"
+  metrics_port: "${METRICS_PORT:9090}"
+  
+  tracing:
+    enabled: "${TRACING_ENABLED:false}"
+    endpoint: "${TRACING_ENDPOINT:http://localhost:4317}"
+  
+  logging:
+    level: "${LOG_LEVEL:INFO}"
+    format: "json"
+    include_timestamp: true
+  
+  health_check:
+    enabled: true
+    interval: 30  # seconds
+    timeout: 10
+
+# Performance Settings
+performance:
+  cache:
+    enabled: "${CACHE_ENABLED:true}"
+    type: "${CACHE_TYPE:memory}"
+    ttl: 3600  # seconds
+  
+  async_processing:
+    enabled: true
+    max_workers: 4
+  
+  batch_processing:
+    enabled: true
+    batch_size: 32
+
+# Security Settings
+security:
+  authentication:
+    enabled: "${ENABLE_AUTH:false}"
+    jwt_secret: "${JWT_SECRET_KEY}"
+  
+  encryption:
+    enabled: true
+    key: "${ENCRYPTION_KEY}"
+  
+  rate_limiting:
+    enabled: "${RATE_LIMIT_ENABLED:true}"
+    requests: "${RATE_LIMIT_REQUESTS:100}"
+    window: "${RATE_LIMIT_WINDOW:60}"
+
+# Logging
+logging:
+  level: "${LOG_LEVEL:INFO}"
+  format: "json"
+  outputs:
+    - type: "console"
+      level: "DEBUG"
+    - type: "file"
+      level: "INFO"
+      path: "./logs/rag.log"
+      max_size: "100MB"
+      backup_count: 5
