@@ -1,14 +1,19 @@
-from .answer_generation import AnswerGenerator, OpenAIGenerator, GroundedGenerator
-from .prompt_engineering import ContextFormatter, PromptTemplate, CitationFormatter
-from .hallucination_control import HallucinationDetector, ConfidenceScorer
+"""
+Generation Components - RAG-The-Game-Changer
+
+Advanced components for answer generation and formatting.
+"""
+
+from .answer_generation import GroundedGenerator
+from .prompt_engineering import PromptEngineer, PromptConfig
+from .hallucination_control import HallucinationController
+from .output_formatting import OutputFormatter, OutputFormat
 
 __all__ = [
-    "AnswerGenerator",
-    "OpenAIGenerator",
     "GroundedGenerator",
-    "ContextFormatter",
-    "PromptTemplate",
-    "CitationFormatter",
-    "HallucinationDetector",
-    "ConfidenceScorer"
+    "PromptEngineer",
+    "PromptConfig",
+    "HallucinationController",
+    "OutputFormatter",
+    "OutputFormat",
 ]

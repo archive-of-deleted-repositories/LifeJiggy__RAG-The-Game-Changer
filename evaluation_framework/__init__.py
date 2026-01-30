@@ -4,21 +4,18 @@ Evaluation Framework - RAG-The-Game-Changer
 Comprehensive evaluation system for RAG pipelines.
 """
 
-from .evaluator import RAGEvaluator, EvaluationMetrics
-from .metrics import RAGMetrics, MetricCalculator
-from .benchmarks import BenchmarkSuite, StandardBenchmarks
-from .quality_assessment import QualityAssessment
+from .metrics import MetricsCalculator
 from .hallucination_detection import HallucinationDetector
-from .performance_monitoring import PerformanceMonitor
+from .benchmarks import BenchmarkRunner, Benchmark, BenchmarkResult
+from .evaluator import Evaluator, EvaluationConfig, EvaluationResult
 
 __all__ = [
-    "RAGEvaluator",
-    "EvaluationMetrics",
-    "RAGMetrics",
-    "MetricCalculator",
-    "BenchmarkSuite",
-    "StandardBenchmarks",
-    "QualityAssessment",
+    "MetricsCalculator",
     "HallucinationDetector",
-    "PerformanceMonitor",
+    "BenchmarkRunner",
+    "Benchmark",
+    "BenchmarkResult",
+    "Evaluator",
+    "EvaluationConfig",
+    "EvaluationResult",
 ]

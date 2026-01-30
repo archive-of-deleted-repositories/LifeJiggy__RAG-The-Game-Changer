@@ -9,6 +9,8 @@ from .pdf_loader import PDFLoader
 from .web_loader import WebLoader
 from .code_loader import CodeLoader
 from .text_loader import TextLoader
+from .database_loader import DatabaseLoader
+from .api_loader import APILoader
 
 __all__ = [
     "DocumentLoader",
@@ -19,4 +21,6 @@ __all__ = [
     "WebLoader",
     "CodeLoader",
     "TextLoader",
+    "DatabaseLoader",
+    "APILoader",
 ]

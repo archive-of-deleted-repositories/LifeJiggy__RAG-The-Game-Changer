@@ -1,28 +1,63 @@
-from .loaders import DocumentLoader, PDFLoader, WebLoader, CodeLoader, DatabaseLoader, APILoader
-from .preprocessors import TextPreprocessor, MetadataExtractor, LanguageDetector, DuplicateDetector, QualityFilter
-from .chunkers import Chunker, TokenChunker, SentenceChunker, ParagraphChunker, SemanticChunker, RecursiveChunker
-from .indexers import Indexer, BatchIndexer, IncrementalIndexer, MetadataIndexer
+"""Data Ingestion Module - RAG-The-Game-Changer
+
+Production-grade data ingestion pipeline with loaders, preprocessors, and chunkers.
+"""
+
+# Import from loaders
+from .loaders.base_classes import DocumentLoader, DocumentMetadata, LoadedDocument, LoaderError
+from .loaders.pdf_loader import PDFLoader
+from .loaders.web_loader import WebLoader
+from .loaders.code_loader import CodeLoader
+from .loaders.text_loader import TextLoader
+from .loaders.database_loader import DatabaseLoader
+from .loaders.api_loader import APILoader
+
+# Import from preprocessors
+from .preprocessors import (
+    TextCleaner,
+    MetadataExtractor,
+    LanguageDetector,
+    DuplicateDetector,
+    QualityFilter,
+    PreprocessingResult,
+    BasePreprocessor,
+)
+
+# Import from chunkers
+from .chunkers.document_chunker import (
+    BaseChunker,
+    TokenChunker,
+    SemanticChunker,
+    FixedSizeChunker,
+    DocumentChunk,
+    create_chunker,
+)
 
 __all__ = [
+    # Loaders
     "DocumentLoader",
-    "PDFLoader", 
+    "DocumentMetadata",
+    "LoadedDocument",
+    "LoaderError",
+    "PDFLoader",
     "WebLoader",
     "CodeLoader",
     "DatabaseLoader",
     "APILoader",
-    "TextPreprocessor",
+    "TextLoader",
+    # Preprocessors
+    "TextCleaner",
     "MetadataExtractor",
     "LanguageDetector",
     "DuplicateDetector",
     "QualityFilter",
-    "Chunker",
+    "PreprocessingResult",
+    "BasePreprocessor",
+    # Chunkers
+    "BaseChunker",
     "TokenChunker",
-    "SentenceChunker", 
-    "ParagraphChunker",
     "SemanticChunker",
-    "RecursiveChunker",
-    "Indexer",
-    "BatchIndexer",
-    "IncrementalIndexer",
-    "MetadataIndexer"
+    "FixedSizeChunker",
+    "DocumentChunk",
+    "create_chunker",
 ]

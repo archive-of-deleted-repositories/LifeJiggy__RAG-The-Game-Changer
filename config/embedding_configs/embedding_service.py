@@ -109,7 +109,7 @@ class SentenceTransformerEmbeddingService(BaseEmbeddingService):
         self.model_name = self.config.get("model", "sentence-transformers/all-MiniLM-L6-v2")
         self.device = self.config.get("device", "cpu")
         self._model = None
-        self._dimensions = None
+        self._dimensions: Optional[int] = None
         self._initialize_model()
 
     def _initialize_model(self):
